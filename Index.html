@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniPass — Technological Institute of the Philippines (T.I.P.)</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --tip-dark:       #121824;
+      --tip-dark-card:  #1e2229;
+      --tip-gold:       #F5B800;
+      --tip-gold-hover: #E5A900;
+      --tip-bg:         #F4F6F8;
+      --tip-card:       #FFFFFF;
+    }
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--tip-bg);
+      color: var(--tip-dark);
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-display { font-family: 'Manrope', sans-serif; }
+    .font-mono { font-family: 'IBM Plex Mono', monospace; }
+
+    /* Custom T.I.P. Badges */
+    .badge-allowed { background: #E6F7ED; color: #0E6237; border: 1px solid #B8E8CD; }
+    .badge-denied  { background: #FDECEC; color: #9A1C1C; border: 1px solid #F8B4B4; }
+    .badge-pending { background: #FEF6E7; color: #925400; border: 1px solid #FBDCA4; }
+    .badge-neutral { background: #EDF0F3; color: #4B5563; border: 1px solid #D1D5DB; }
+
+    /* T.I.P. Buttons */
+    .btn-tip-gold {
+      background-color: var(--tip-gold);
+      color: var(--tip-dark);
+      font-weight: 700;
+      transition: all 0.15s ease-in-out;
+    }
+    .btn-tip-gold:hover {
+      background-color: var(--tip-gold-hover);
+      transform: translateY(-1px);
+    }
+    .btn-tip-dark {
+      background-color: var(--tip-dark);
+      color: #FFFFFF;
+      font-weight: 600;
+      transition: all 0.15s ease-in-out;
+    }
+    .btn-tip-dark:hover {
+      background-color: #222d42;
+    }
+
+    /* Active Nav link */
+    .nav-item.active {
+      background-color: var(--tip-gold);
+      color: var(--tip-dark);
+      font-weight: 700;
+    }
+    .nav-item:not(.active):hover {
+      background-color: rgba(255, 255, 255, 0.08);
+      color: #FFFFFF;
+    }
+
+    /* Pulse animation for gate map markers */
+    @keyframes pulse-ring {
+      0% { transform: scale(0.9); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 0.3; }
+      100% { transform: scale(0.9); opacity: 0.8; }
+    }
+    .marker-pulse {
+      animation: pulse-ring 2.5s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col md:flex-row antialiased">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="w-full md:w-64 bg-[#121824] text-white flex flex-col justify-between shrink-0 min-h-screen border-r border-[#222c3c]">
+    <div>
+      <!-- Fixed Logo Header -->
+      <div class="h-20 px-5 flex items-center gap-3 border-b border-[#222c3c]/80 bg-[#0d121c]">
+        <div class="w-10 h-10 rounded-xl bg-[#F5B800] text-[#121824] flex items-center justify-center font-display font-extrabold text-xl shadow-lg">
+          U
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-display font-extrabold text-lg tracking-tight text-white">UniPass</span>
+            <span class="text-[10px] bg-[#F5B800]/20 text-[#F5B800] px-1.5 py-0.5 rounded font-mono font-bold">v2.0</span>
+          </div>
+          <p class="text-[11px] text-gray-400 font-medium leading-none mt-0.5">T.I.P. Campus Access</p>
+        </div>
+      </div>
+
+      <!-- Navigation Groups -->
+      <nav class="p-3 space-y-6">
+        <!-- Operations Group -->
+        <div>
+          <div class="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-gray-400 flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#F5B800]"></span>
+            Operations
+          </div>
+          <div class="space-y-1">
+            <button onclick="switchTab('overview')" id="nav-overview" class="nav-item active w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-left transition-colors">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+              <span>Overview</span>
+            </button>
+            <button onclick="switchTab('scan')" id="nav-scan" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-300 text-left transition-colors">
+              <svg class="w-4 h-4 shrink-0 text-[#F5B800]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+              <span class="flex-1 font-semibold">Scan & verify</span>
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            </button>
+            <button onclick="switchTab('passes')" id="nav-passes" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-300 text-left transition-colors">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+              <span>Visitor passes</span>
+              <span class="text-[11px] bg-gray-800 text-gray-300 px-1.5 py-0.5 rounded font-mono" id="badge-pass-count">4</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Records Group -->
+        <div>
+          <div class="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-gray-400 flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span>
+            Records & Control
+          </div>
+          <div class="space-y-1">
+            <button onclick="switchTab('people')" id="nav-people" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-300 text-left transition-colors">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+              <span>People & cards</span>
+            </button>
+            <button onclick="switchTab('activity')" id="nav-activity" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-300 text-left transition-colors">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+              <span>Scan activity</span>
+            </button>
+            <button onclick="switchTab('violations')" id="nav-violations" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-300 text-left transition-colors">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              <span>Violations</span>
+              <span class="text-[11px] bg-red-950 text-red-300 px-1.5 py-0.5 rounded font-mono font-bold" id="badge-violation-count">2</span>
+            </button>
+            <button onclick="switchTab('devices')" id="nav-devices" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-300 text-left transition-colors">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/></svg>
+              <span>Devices & gates</span>
+            </button>
+            <button onclick="switchTab('reviews')" id="nav-reviews" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-300 text-left transition-colors">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              <span>Suspicious scans</span>
+              <span class="text-[11px] bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded font-mono font-bold">1</span>
+            </button>
+            <button onclick="switchTab('registrar')" id="nav-registrar" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-300 text-left transition-colors">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+              <span>Registrar sync</span>
+            </button>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Pinned Sidebar Footer -->
+    <div class="p-4 border-t border-[#222c3c] bg-[#0d121c]/60">
+      <div class="flex items-center justify-between text-xs text-gray-400">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="sidebar-campus-status">All campuses active</span>
+        </div>
+        <span class="font-mono text-[10px] text-gray-400">PG16</span>
+      </div>
+      <div class="mt-2 text-[11px] text-gray-400 flex items-center justify-between">
+        <span>T.I.P. Security Ops</span>
+        <span class="text-[#F5B800] font-mono">Asia/Manila</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="flex-1 flex flex-col min-w-0 bg-[#F4F6F8]">
+    <!-- Top Global Header -->
+    <header class="h-20 bg-white border-b border-[#e3e7eb] px-6 flex items-center justify-between gap-4 sticky top-0 z-30 shadow-xs">
+      <div class="flex items-center gap-4">
+        <div>
+          <h1 class="font-display font-extrabold text-lg text-[#121824] leading-tight flex items-center gap-2">
+            Technological Institute of the Philippines
+            <span class="text-xs bg-[#121824] text-[#F5B800] px-2 py-0.5 rounded-full font-bold">T.I.P.</span>
+          </h1>
+          <p class="text-xs text-gray-500 font-medium">Smart Campus Access & Threat Intelligence</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- Outage Mode Indicator (if any device is offline) -->
+        <div id="top-outage-pill" class="hidden items-center gap-1.5 bg-amber-50 text-amber-800 border border-amber-300 px-2.5 py-1 rounded-full text-xs font-semibold">
+          <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+          Gate 3 Stale: Outage Cache Ready
+        </div>
+
+        <!-- Campus Switcher -->
+        <div class="flex items-center bg-[#F4F6F8] p-1 rounded-xl border border-[#d9dfe5]">
+          <label for="campus-selector" class="sr-only">Select Campus</label>
+          <div class="flex items-center gap-1 text-xs font-bold text-gray-700 pl-2 pr-1">
+            <svg class="w-3.5 h-3.5 text-[#121824]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          </div>
+          <select id="campus-selector" onchange="onCampusChange(this.value)" class="bg-transparent text-xs font-bold text-[#121824] pr-2 py-1 focus:outline-none cursor-pointer">
+            <option value="ALL">All campuses (QC & Manila)</option>
+            <option value="QC">T.I.P. Quezon City</option>
+            <option value="MNL">T.I.P. Manila</option>
+          </select>
+        </div>
+
+        <!-- Operator User Menu -->
+        <div class="flex items-center gap-2 pl-2 border-l border-gray-200">
+          <div class="w-8 h-8 rounded-full bg-[#121824] text-[#F5B800] flex items-center justify-center font-bold text-xs">
+            JD
+          </div>
+          <div class="hidden sm:block text-left">
+            <div class="text-xs font-bold text-[#121824] leading-tight">Jose dela Cruz</div>
+            <div class="text-[10px] text-gray-500 font-semibold uppercase">Lead Security Guard</div>
+          </div>
+          <button class="text-gray-400 hover:text-gray-600 p-1" title="Sign out">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Outage Mode Banner (Prompt Feature 4) -->
+    <div id="outage-banner" class="bg-amber-500 text-[#121824] px-6 py-2 text-xs font-bold flex items-center justify-between border-b border-amber-600">
+      <div class="flex items-center gap-2">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        <span>Outage Mode Active: Gate 3 turnstile device is STALE. Scans are cached locally via <code class="bg-[#121824]/10 px-1 py-0.5 rounded font-mono">v_offline_allowlist</code> and will automatically sync with original timestamp & <code class="bg-[#121824]/10 px-1 py-0.5 rounded font-mono">client_scan_id</code>.</span>
+      </div>
+      <button onclick="document.getElementById('outage-banner').classList.add('hidden')" class="hover:opacity-80 p-0.5">✕</button>
+    </div>
+
+    <!-- Workspace Container -->
+    <div class="p-6 max-w-7xl w-full mx-auto space-y-6">
+
+      <!-- ================= TAB: OVERVIEW ================= -->
+      <section id="tab-overview" class="space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-[#8b6a00] flex items-center gap-2">
+              <span class="w-4 h-0.5 bg-[#F5B800]"></span>
+              Live Campus Intelligence
+            </div>
+            <h2 class="text-2xl font-display font-extrabold text-[#121824] mt-1">Operations Overview</h2>
+            <p class="text-xs text-gray-500">Real-time attendance, active checkpoints, and automated threat monitoring</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="simulateHeartbeat()" class="px-3 py-2 bg-white border border-[#d9dfe5] text-xs font-bold text-[#121824] rounded-lg hover:bg-gray-50 flex items-center gap-1.5 shadow-2xs">
+              <svg class="w-3.5 h-3.5 text-[#F5B800]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+              Simulate Device Heartbeat
+            </button>
+            <button onclick="switchTab('scan')" class="btn-tip-gold px-4 py-2 rounded-lg text-xs flex items-center gap-1.5 shadow-2xs">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+              Open Scan & Verify
+            </button>
+          </div>
+        </div>
+
+        <!-- KPI Metric Cards (v_on_campus_by_campus) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Metric 1: Headcount -->
+          <div class="bg-white p-5 rounded-2xl border border-[#e3e7eb] shadow-2xs relative overflow-hidden">
+            <div class="flex items-center justify-between text-gray-500 text-xs font-semibold">
+              <span>On Campus Headcount</span>
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            </div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <span class="text-3xl font-display font-extrabold text-[#121824]" id="kpi-headcount">1,482</span>
+              <span class="text-xs font-bold text-emerald-600">↑ 8% vs yesterday</span>
+            </div>
+            <div class="mt-2 text-[11px] text-gray-400 flex items-center gap-1.5" id="kpi-lag-warning">
+              <span class="text-amber-600 font-semibold flex items-center gap-1">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                1 device stale: numbers may be slightly behind
+              </span>
+            </div>
+          </div>
+
+          <!-- Metric 2: Today's Entries -->
+          <div class="bg-white p-5 rounded-2xl border border-[#e3e7eb] shadow-2xs">
+            <div class="flex items-center justify-between text-gray-500 text-xs font-semibold">
+              <span>Today's Total Scans</span>
+              <span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded font-mono text-gray-600">IN / OUT</span>
+            </div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <span class="text-3xl font-display font-extrabold text-[#121824]" id="kpi-scans">3,240</span>
+              <span class="text-xs font-bold text-gray-500">Peak: 7:30 AM</span>
+            </div>
+            <div class="mt-2 text-[11px] text-gray-400">
+              Pass-through entries: <strong class="text-gray-700 font-mono">118</strong>
+            </div>
+          </div>
+
+          <!-- Metric 3: Active Gates -->
+          <div class="bg-white p-5 rounded-2xl border border-[#e3e7eb] shadow-2xs">
+            <div class="flex items-center justify-between text-gray-500 text-xs font-semibold">
+              <span>Active Turnstiles / Gates</span>
+              <span class="badge-allowed text-[10px] px-2 py-0.5 rounded-full font-bold">ONLINE</span>
+            </div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <span class="text-3xl font-display font-extrabold text-[#121824]">6 / 7</span>
+              <span class="text-xs text-amber-600 font-semibold">1 requires check</span>
+            </div>
+            <div class="mt-2 text-[11px] text-gray-400">
+              QC: 4 gates | Manila: 3 gates
+            </div>
+          </div>
+
+          <!-- Metric 4: Open Violations / Review Hints -->
+          <div class="bg-white p-5 rounded-2xl border border-[#e3e7eb] shadow-2xs">
+            <div class="flex items-center justify-between text-gray-500 text-xs font-semibold">
+              <span>Threat Flags / Reviews</span>
+              <span class="badge-pending text-[10px] px-2 py-0.5 rounded-full font-bold">ATTENTION</span>
+            </div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <span class="text-3xl font-display font-extrabold text-[#121824]">3</span>
+              <span class="text-xs text-red-600 font-semibold">1 passback hint</span>
+            </div>
+            <div class="mt-2 text-[11px] text-gray-400">
+              0 automatic denials; guard review pending
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Grid (Prompt Feature 2: v_hourly_entries & v_peak_hour_curve) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Today's Hourly Entries -->
+          <div class="bg-white p-5 rounded-2xl border border-[#e3e7eb] shadow-2xs">
+            <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+              <div>
+                <h3 class="font-bold text-sm text-[#121824]">Today's Entries by Hour</h3>
+                <p class="text-xs text-gray-400">Read from PostgreSQL view <code class="font-mono text-[10px] bg-gray-100 px-1 py-0.5 rounded">v_hourly_entries</code></p>
+              </div>
+              <span class="text-xs font-mono font-bold text-gray-500">Asia/Manila</span>
+            </div>
+
+            <!-- SVG Line Chart Mock -->
+            <div class="mt-4 h-48 relative flex items-end justify-between px-2 pt-6">
+              <!-- Y Axis Lines -->
+              <div class="absolute inset-x-0 top-6 border-b border-dashed border-gray-200"></div>
+              <div class="absolute inset-x-0 top-24 border-b border-dashed border-gray-200"></div>
+              <div class="absolute inset-x-0 top-40 border-b border-dashed border-gray-200"></div>
+
+              <!-- Hourly Columns -->
+              <div class="flex-1 flex flex-col items-center gap-1.5 z-10">
+                <div class="w-full bg-[#121824]/10 rounded-t h-8 relative group cursor-pointer hover:bg-[#F5B800]">
+                  <span class="hidden group-hover:block absolute -top-7 left-1/2 -translate-x-1/2 bg-[#121824] text-white text-[10px] py-0.5 px-1.5 rounded font-mono">62</span>
+                </div>
+                <span class="text-[10px] text-gray-400 font-mono">6A</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-1.5 z-10 px-0.5">
+                <div class="w-full bg-[#121824] rounded-t h-36 relative group cursor-pointer hover:bg-[#F5B800]">
+                  <span class="hidden group-hover:block absolute -top-7 left-1/2 -translate-x-1/2 bg-[#121824] text-white text-[10px] py-0.5 px-1.5 rounded font-mono">480</span>
+                </div>
+                <span class="text-[10px] text-[#121824] font-bold font-mono">7A</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-1.5 z-10 px-0.5">
+                <div class="w-full bg-[#121824] rounded-t h-28 relative group cursor-pointer hover:bg-[#F5B800]">
+                  <span class="hidden group-hover:block absolute -top-7 left-1/2 -translate-x-1/2 bg-[#121824] text-white text-[10px] py-0.5 px-1.5 rounded font-mono">340</span>
+                </div>
+                <span class="text-[10px] text-gray-400 font-mono">8A</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-1.5 z-10 px-0.5">
+                <div class="w-full bg-[#121824]/30 rounded-t h-16 relative group cursor-pointer hover:bg-[#F5B800]">
+                  <span class="hidden group-hover:block absolute -top-7 left-1/2 -translate-x-1/2 bg-[#121824] text-white text-[10px] py-0.5 px-1.5 rounded font-mono">180</span>
+                </div>
+                <span class="text-[10px] text-gray-400 font-mono">9A</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-1.5 z-10 px-0.5">
+                <div class="w-full bg-[#121824]/30 rounded-t h-12 relative group cursor-pointer hover:bg-[#F5B800]">
+                  <span class="hidden group-hover:block absolute -top-7 left-1/2 -translate-x-1/2 bg-[#121824] text-white text-[10px] py-0.5 px-1.5 rounded font-mono">130</span>
+                </div>
+                <span class="text-[10px] text-gray-400 font-mono">10A</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-1.5 z-10 px-0.5">
+                <div class="w-full bg-[#F5B800] rounded-t h-24 relative group cursor-pointer hover:bg-[#E5A900]">
+                  <span class="hidden group-hover:block absolute -top-7 left-1/2 -translate-x-1/2 bg-[#121824] text-white text-[10px] py-0.5 px-1.5 rounded font-mono">295</span>
+                </div>
+                <span class="text-[10px] text-[#121824] font-bold font-mono">11A</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-1.5 z-10 px-0.5">
+                <div class="w-full bg-[#F5B800] rounded-t h-32 relative group cursor-pointer hover:bg-[#E5A900]">
+                  <span class="hidden group-hover:block absolute -top-7 left-1/2 -translate-x-1/2 bg-[#121824] text-white text-[10px] py-0.5 px-1.5 rounded font-mono">410</span>
+                </div>
+                <span class="text-[10px] text-[#121824] font-bold font-mono">12P</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-1.5 z-10 px-0.5">
+                <div class="w-full bg-[#121824]/20 rounded-t h-14 relative group cursor-pointer hover:bg-[#F5B800]">
+                  <span class="hidden group-hover:block absolute -top-7 left-1/2 -translate-x-1/2 bg-[#121824] text-white text-[10px] py-0.5 px-1.5 rounded font-mono">160</span>
+                </div>
+                <span class="text-[10px] text-gray-400 font-mono">1P</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-1.5 z-10 px-0.5">
+                <div class="w-full bg-[#121824]/20 rounded-t h-10 relative group cursor-pointer hover:bg-[#F5B800]">
+                  <span class="hidden group-hover:block absolute -top-7 left-1/2 -translate-x-1/2 bg-[#121824] text-white text-[10px] py-0.5 px-1.5 rounded font-mono">110</span>
+                </div>
+                <span class="text-[10px] text-gray-400 font-mono">2P</span>
+              </div>
+            </div>
+            <div class="mt-3 flex items-center justify-between text-xs text-gray-500 pt-2 border-t border-gray-100">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#121824]"></span> Morning Rush</span>
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#F5B800]"></span> Lunch Peak</span>
+              <span class="text-[11px] text-gray-400 font-mono">Updated 1m ago</span>
+            </div>
+          </div>
+
+          <!-- Typical-day Peak Hour Curve -->
+          <div class="bg-white p-5 rounded-2xl border border-[#e3e7eb] shadow-2xs">
+            <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+              <div>
+                <h3 class="font-bold text-sm text-[#121824]">Typical-Day Peak Hours</h3>
+                <p class="text-xs text-gray-400">Baseline distribution curve from <code class="font-mono text-[10px] bg-gray-100 px-1 py-0.5 rounded">v_peak_hour_curve</code></p>
+              </div>
+              <span class="text-xs bg-gray-100 px-2 py-0.5 rounded text-gray-600 font-semibold">Semester Norm</span>
+            </div>
+
+            <div class="mt-4 space-y-3">
+              <div>
+                <div class="flex justify-between text-xs font-semibold mb-1">
+                  <span class="text-gray-700">07:00 - 08:30 (Morning Entry Surge)</span>
+                  <span class="text-[#121824] font-mono font-bold">38% of daily flow</span>
+                </div>
+                <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+                  <div class="bg-[#121824] h-3 rounded-full" style="width: 88%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs font-semibold mb-1">
+                  <span class="text-gray-700">11:30 - 13:00 (Lunch Exit & Inward Pass)</span>
+                  <span class="text-[#121824] font-mono font-bold">29% of daily flow</span>
+                </div>
+                <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+                  <div class="bg-[#F5B800] h-3 rounded-full" style="width: 68%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs font-semibold mb-1">
+                  <span class="text-gray-700">16:30 - 18:00 (Evening Dismissal Rush)</span>
+                  <span class="text-[#121824] font-mono font-bold">24% of daily flow</span>
+                </div>
+                <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+                  <div class="bg-gray-700 h-3 rounded-full" style="width: 55%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs font-semibold mb-1">
+                  <span class="text-gray-700">Other Hours (Steady Traffic)</span>
+                  <span class="text-gray-500 font-mono">9% of daily flow</span>
+                </div>
+                <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+                  <div class="bg-gray-300 h-3 rounded-full" style="width: 20%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 bg-[#F4F6F8] p-3 rounded-xl text-xs text-gray-600 flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#F5B800] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span>Security recommendation: Deploy 2 auxiliary turnstiles between 07:15 and 08:15 AM at Gate 1.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB: SCAN & VERIFY ================= -->
+      <section id="tab-scan" class="hidden space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-[#8b6a00] flex items-center gap-2">
+              <span class="w-4 h-0.5 bg-[#F5B800]"></span>
+              Guard Point of Entry
+            </div>
+            <h2 class="text-2xl font-display font-extrabold text-[#121824] mt-1">Scan & Verify Gate Access</h2>
+            <p class="text-xs text-gray-500">Scan QR token or paste UniPass credential. Strict privacy-preserving verification.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-gray-500 font-semibold">Active Gate Device:</span>
+            <span class="font-mono text-xs bg-white border border-gray-200 px-2.5 py-1 rounded-md font-bold text-[#121824]">GATE-01-QC-TURNSTILE</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Left: Input & Direction Controls -->
+          <div class="lg:col-span-6 bg-white p-6 rounded-2xl border border-[#e3e7eb] shadow-2xs space-y-5">
+            <!-- Direction Toggle (Prompt Requirement: IN, OUT, PASS) -->
+            <div>
+              <label class="block text-xs font-bold uppercase text-gray-600 mb-2">Gate Direction</label>
+              <div class="grid grid-cols-3 gap-2 p-1 bg-[#F4F6F8] rounded-xl border border-[#d9dfe5]">
+                <button type="button" onclick="setDirection('IN')" id="dir-in" class="py-2 text-xs font-bold rounded-lg transition-all bg-[#121824] text-white shadow-2xs">
+                  IN (Inward)
+                </button>
+                <button type="button" onclick="setDirection('OUT')" id="dir-out" class="py-2 text-xs font-bold rounded-lg text-gray-600 hover:text-gray-900 transition-all">
+                  OUT (Leaving)
+                </button>
+                <button type="button" onclick="setDirection('PASS')" id="dir-pass" class="py-2 text-xs font-bold rounded-lg text-gray-600 hover:text-gray-900 transition-all">
+                  PASS (Through)
+                </button>
+              </div>
+            </div>
+
+            <!-- Credential Input -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label for="credential-input" class="text-xs font-bold uppercase text-gray-600">UniPass Code or Scanned Token</label>
+                <span class="text-[11px] text-gray-400">Uses <code class="font-mono text-[#121824]">find_card_by_credential()</code></span>
+              </div>
+              <div class="relative">
+                <input type="text" id="credential-input" placeholder="e.g. UNIPASS-2026-89412 or paste QR token" class="w-full pl-4 pr-10 py-3 bg-[#F4F6F8] border border-[#d9dfe5] rounded-xl text-sm font-mono text-[#121824] focus:outline-none focus:border-[#F5B800] focus:ring-2 focus:ring-[#F5B800]/20 transition-all">
+                <button onclick="clearCredentialInput()" class="absolute right-3 top-3.5 text-gray-400 hover:text-gray-600">✕</button>
+              </div>
+            </div>
+
+            <!-- Mandatory Visual Checkbox for Manual Entry (Prompt Section 2) -->
+            <div class="bg-amber-50/70 border border-amber-200/80 p-3.5 rounded-xl">
+              <label class="flex items-start gap-3 cursor-pointer">
+                <input type="checkbox" id="guard-visual-check" class="mt-0.5 w-4 h-4 rounded text-[#121824] focus:ring-[#F5B800]">
+                <div class="text-xs">
+                  <span class="font-bold text-[#121824] block">I checked the face against the photo (GUARD_VISUAL)</span>
+                  <span class="text-gray-600 text-[11px] block mt-0.5">Required by Postgres schema when entering a code manually (<code class="font-mono">input_method = 'MANUAL_CODE'</code>). The database rejects manual scans without this verification.</span>
+                </div>
+              </label>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="flex items-center gap-3 pt-2">
+              <button onclick="processScan('MANUAL_CODE')" class="btn-tip-gold flex-1 py-3 rounded-xl text-sm shadow-xs flex items-center justify-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Verify & Record Scan
+              </button>
+              <button onclick="simulateCameraScan()" class="btn-tip-dark px-4 py-3 rounded-xl text-sm shadow-xs flex items-center gap-2">
+                <svg class="w-4 h-4 text-[#F5B800]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                Simulate Camera QR
+              </button>
+            </div>
+
+            <!-- Demo helper test buttons -->
+            <div class="pt-4 border-t border-gray-100">
+              <span class="text-[11px] font-bold text-gray-500 uppercase block mb-2">Test with Database Credentials:</span>
+              <div class="flex flex-wrap gap-2">
+                <button onclick="fillAndCheck('UNIPASS-2026-89412')" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2.5 py-1 rounded-lg font-mono">
+                  Student (Active)
+                </button>
+                <button onclick="fillAndCheck('UNIPASS-2026-21045')" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2.5 py-1 rounded-lg font-mono">
+                  Faculty (Active)
+                </button>
+                <button onclick="fillAndCheck('UNIPASS-VIS-000001')" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2.5 py-1 rounded-lg font-mono">
+                  Visitor Pass
+                </button>
+                <button onclick="fillAndCheck('UNIPASS-2026-99999')" class="text-xs bg-red-50 hover:bg-red-100 text-red-700 px-2.5 py-1 rounded-lg font-mono">
+                  Suspended Student
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Decision Card (Prompt Section 2) -->
+          <div class="lg:col-span-6 flex flex-col">
+            <div id="decision-card-container" class="bg-white p-6 rounded-2xl border border-[#e3e7eb] shadow-2xs flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between pb-3 border-b border-gray-100">
+                  <span class="text-xs font-bold uppercase tracking-wider text-gray-400">Scan Evaluation Result</span>
+                  <span id="decision-timestamp" class="text-xs font-mono text-gray-400">Ready for scan</span>
+                </div>
+
+                <!-- Decision State Banner -->
+                <div id="decision-badge-box" class="my-5 p-6 rounded-2xl text-center bg-gray-50 border border-gray-200">
+                  <div id="decision-icon" class="w-12 h-12 rounded-full mx-auto flex items-center justify-center bg-gray-200 text-gray-600 mb-3">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                  </div>
+                  <h3 id="decision-title" class="font-display font-extrabold text-2xl text-gray-700">Awaiting Credential</h3>
+                  <p id="decision-subtitle" class="text-xs text-gray-500 mt-1">Scan a physical card barcode/QR or type a code to verify access status.</p>
+                </div>
+
+                <!-- Cardholder summary (Only minimum decision details shown) -->
+                <div id="decision-details" class="hidden space-y-3 bg-[#F4F6F8] p-4 rounded-xl border border-[#d9dfe5]">
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="text-gray-500">Person Category:</span>
+                    <strong id="cardholder-category" class="font-bold text-[#121824]">STUDENT</strong>
+                  </div>
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="text-gray-500">Card Identifier:</span>
+                    <span id="cardholder-code" class="font-mono font-bold text-[#121824]">UNIPASS-2026-89412</span>
+                  </div>
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="text-gray-500">Allowed Campus:</span>
+                    <span id="cardholder-campus" class="font-semibold text-gray-700">T.I.P. Quezon City</span>
+                  </div>
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="text-gray-500">Direction & Gate:</span>
+                    <span id="cardholder-dir" class="font-mono text-gray-700">IN @ Gate 1</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Strict Privacy Disclaimer (Required by Prompt Section 2) -->
+              <div class="mt-6 pt-4 border-t border-gray-100 flex items-start gap-2 text-[11px] text-gray-400">
+                <svg class="w-4 h-4 text-gray-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                <span>Student details stay private. Only the minimum required decision is displayed. Medical and disciplinary specifics are never shown on gate screen.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB: DEVICES & GATE MAP ================= -->
+      <section id="tab-devices" class="hidden space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-[#8b6a00] flex items-center gap-2">
+              <span class="w-4 h-0.5 bg-[#F5B800]"></span>
+              Hardware & Turnstiles
+            </div>
+            <h2 class="text-2xl font-display font-extrabold text-[#121824] mt-1">Interactive Gate Map & Device Health</h2>
+            <p class="text-xs text-gray-500">Real-time gate traffic from <code class="font-mono text-[#121824]">v_gate_traffic_15m</code> and health from <code class="font-mono text-[#121824]">v_device_health</code></p>
+          </div>
+          <button onclick="simulateHeartbeat()" class="btn-tip-gold px-3.5 py-2 rounded-lg text-xs flex items-center gap-1.5 shadow-2xs">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            Send Heartbeat to All Devices
+          </button>
+        </div>
+
+        <!-- Interactive Map Container (Prompt Section 4.3) -->
+        <div class="bg-[#121824] p-6 rounded-2xl border border-[#222c3c] shadow-md text-white relative">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-[#F5B800]"></span>
+              <span class="text-xs font-bold uppercase tracking-wider text-gray-300">Campus Layout & Device Density Plan</span>
+            </div>
+            <div class="flex items-center gap-3 text-xs text-gray-400">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Online</span>
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-400"></span> Stale (&gt;5m)</span>
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-400"></span> Offline</span>
+            </div>
+          </div>
+
+          <!-- Architectural Canvas Mock -->
+          <div class="relative w-full h-80 bg-[#161c28] rounded-xl border border-dashed border-[#2b3548] overflow-hidden">
+            <!-- Background Grid Lines -->
+            <div class="absolute inset-0 opacity-15" style="background-image: radial-gradient(#F5B800 1px, transparent 1px); background-size: 24px 24px;"></div>
+
+            <!-- Campus Building Blocks Mock -->
+            <div class="absolute top-12 left-16 w-48 h-28 bg-[#1f2838] border border-[#2e3b52] rounded-lg p-2 flex flex-col justify-between">
+              <span class="text-[10px] font-bold text-gray-400 uppercase">Main Academic Bldg (Arlegui)</span>
+              <span class="text-[10px] text-gray-400 font-mono">Zones A1-A4</span>
+            </div>
+            <div class="absolute top-12 right-20 w-44 h-40 bg-[#1f2838] border border-[#2e3b52] rounded-lg p-2 flex flex-col justify-between">
+              <span class="text-[10px] font-bold text-gray-400 uppercase">Engineering & Tech Complex</span>
+              <span class="text-[10px] text-gray-400 font-mono">Robotics / Labs</span>
+            </div>
+            <div class="absolute bottom-8 left-48 w-64 h-20 bg-[#1f2838] border border-[#2e3b52] rounded-lg p-2 flex flex-col justify-between">
+              <span class="text-[10px] font-bold text-gray-400 uppercase">Student Center & OSA Office</span>
+              <span class="text-[10px] text-gray-400 font-mono">Pass Validation / Discipline</span>
+            </div>
+
+            <!-- Placed Device Pin 1 (Gate 1 Main Entrance: map_x: 18%, map_y: 82%) -->
+            <div class="absolute" style="left: 18%; top: 80%;">
+              <div class="relative group cursor-pointer">
+                <span class="marker-pulse absolute -inset-2 rounded-full bg-emerald-400"></span>
+                <div class="relative w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-xs shadow-lg border-2 border-[#121824]">
+                  G1
+                </div>
+                <!-- Tooltip -->
+                <div class="hidden group-hover:block absolute bottom-9 left-1/2 -translate-x-1/2 w-48 bg-[#0e131d] text-white p-2.5 rounded-lg shadow-xl text-xs border border-gray-700 z-20">
+                  <div class="font-bold text-emerald-400">Gate 1 - Main Turnstile</div>
+                  <div class="text-[11px] text-gray-300 mt-1">Scans (15m): <strong class="text-white font-mono">142</strong></div>
+                  <div class="text-[10px] text-gray-400 font-mono">Status: ONLINE (Last seen 12s ago)</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Placed Device Pin 2 (Gate 2 Engineering: map_x: 82%, map_y: 25%) -->
+            <div class="absolute" style="left: 82%; top: 25%;">
+              <div class="relative group cursor-pointer">
+                <span class="marker-pulse absolute -inset-1.5 rounded-full bg-emerald-400"></span>
+                <div class="relative w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-[10px] shadow-lg border-2 border-[#121824]">
+                  G2
+                </div>
+                <div class="hidden group-hover:block absolute bottom-8 left-1/2 -translate-x-1/2 w-48 bg-[#0e131d] text-white p-2.5 rounded-lg shadow-xl text-xs border border-gray-700 z-20">
+                  <div class="font-bold text-emerald-400">Gate 2 - Eng'g Annex</div>
+                  <div class="text-[11px] text-gray-300 mt-1">Scans (15m): <strong class="text-white font-mono">88</strong></div>
+                  <div class="text-[10px] text-gray-400 font-mono">Status: ONLINE</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Placed Device Pin 3 (Gate 3 Back Gate - Stale: map_x: 48%, map_y: 12%) -->
+            <div class="absolute" style="left: 48%; top: 12%;">
+              <div class="relative group cursor-pointer">
+                <span class="absolute -inset-1.5 rounded-full bg-amber-400/40"></span>
+                <div class="relative w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold text-[10px] shadow-lg border-2 border-[#121824]" id="g3-pin">
+                  G3
+                </div>
+                <div class="hidden group-hover:block absolute top-8 left-1/2 -translate-x-1/2 w-52 bg-[#0e131d] text-white p-2.5 rounded-lg shadow-xl text-xs border border-amber-600/50 z-20">
+                  <div class="font-bold text-amber-400">Gate 3 - Service Exit</div>
+                  <div class="text-[11px] text-gray-300 mt-1">Scans (15m): <strong class="text-white font-mono">14</strong></div>
+                  <div class="text-[10px] text-amber-300 font-mono">Status: STALE (&gt;6m without heartbeat)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Devices Table -->
+        <div class="bg-white rounded-2xl border border-[#e3e7eb] overflow-hidden shadow-2xs">
+          <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="font-bold text-sm text-[#121824]">Registered Access Devices</h3>
+            <span class="text-xs text-gray-400 font-mono">Source: devices table</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-[#F4F6F8] text-gray-500 font-semibold border-b border-gray-200">
+                <tr>
+                  <th class="px-5 py-3">Device Code</th>
+                  <th class="px-4 py-3">Location / Gate</th>
+                  <th class="px-4 py-3">Campus</th>
+                  <th class="px-4 py-3">Health Status</th>
+                  <th class="px-4 py-3">15m Traffic</th>
+                  <th class="px-4 py-3">Last Heartbeat</th>
+                  <th class="px-5 py-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100 font-medium">
+                <tr class="hover:bg-gray-50/80">
+                  <td class="px-5 py-3 font-mono font-bold text-[#121824]">DEV-QC-G1-01</td>
+                  <td class="px-4 py-3">Gate 1 Main Pedestrian Turnstile</td>
+                  <td class="px-4 py-3 font-semibold text-gray-700">T.I.P. Quezon City</td>
+                  <td class="px-4 py-3"><span class="badge-allowed px-2 py-0.5 rounded-full font-bold">ONLINE</span></td>
+                  <td class="px-4 py-3 font-mono font-bold">142 scans</td>
+                  <td class="px-4 py-3 text-gray-400 font-mono">12s ago</td>
+                  <td class="px-5 py-3 text-right"><button onclick="simulateHeartbeat()" class="text-[#121824] hover:text-[#F5B800] font-bold">Ping</button></td>
+                </tr>
+                <tr class="hover:bg-gray-50/80">
+                  <td class="px-5 py-3 font-mono font-bold text-[#121824]">DEV-QC-G2-01</td>
+                  <td class="px-4 py-3">Gate 2 Tech Complex Turnstile</td>
+                  <td class="px-4 py-3 font-semibold text-gray-700">T.I.P. Quezon City</td>
+                  <td class="px-4 py-3"><span class="badge-allowed px-2 py-0.5 rounded-full font-bold">ONLINE</span></td>
+                  <td class="px-4 py-3 font-mono font-bold">88 scans</td>
+                  <td class="px-4 py-3 text-gray-400 font-mono">45s ago</td>
+                  <td class="px-5 py-3 text-right"><button onclick="simulateHeartbeat()" class="text-[#121824] hover:text-[#F5B800] font-bold">Ping</button></td>
+                </tr>
+                <tr class="hover:bg-amber-50/50 bg-amber-50/20">
+                  <td class="px-5 py-3 font-mono font-bold text-[#121824]">DEV-QC-G3-01</td>
+                  <td class="px-4 py-3">Gate 3 Service & Maintenance Exit</td>
+                  <td class="px-4 py-3 font-semibold text-gray-700">T.I.P. Quezon City</td>
+                  <td class="px-4 py-3" id="g3-table-badge"><span class="badge-pending px-2 py-0.5 rounded-full font-bold">STALE (6m)</span></td>
+                  <td class="px-4 py-3 font-mono font-bold">14 scans</td>
+                  <td class="px-4 py-3 text-amber-700 font-mono" id="g3-time">6m 12s ago</td>
+                  <td class="px-5 py-3 text-right"><button onclick="simulateHeartbeat()" class="btn-tip-gold px-2 py-1 rounded text-[11px]">Heartbeat</button></td>
+                </tr>
+                <tr class="hover:bg-gray-50/80">
+                  <td class="px-5 py-3 font-mono font-bold text-[#121824]">DEV-MNL-G1-01</td>
+                  <td class="px-4 py-3">Casal St. Turnstile 1</td>
+                  <td class="px-4 py-3 font-semibold text-gray-700">T.I.P. Manila</td>
+                  <td class="px-4 py-3"><span class="badge-allowed px-2 py-0.5 rounded-full font-bold">ONLINE</span></td>
+                  <td class="px-4 py-3 font-mono font-bold">115 scans</td>
+                  <td class="px-4 py-3 text-gray-400 font-mono">20s ago</td>
+                  <td class="px-5 py-3 text-right"><button onclick="simulateHeartbeat()" class="text-[#121824] hover:text-[#F5B800] font-bold">Ping</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB: PEOPLE & CARDS (Bulk Actions) ================= -->
+      <section id="tab-people" class="hidden space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-[#8b6a00] flex items-center gap-2">
+              <span class="w-4 h-0.5 bg-[#F5B800]"></span>
+              Identity Directory
+            </div>
+            <h2 class="text-2xl font-display font-extrabold text-[#121824] mt-1">People & Cards Management</h2>
+            <p class="text-xs text-gray-500">Students, faculty, and staff records with bulk actions and transaction operator auditing</p>
+          </div>
+          <button class="btn-tip-gold px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-2xs">
+            + Issue New Card
+          </button>
+        </div>
+
+        <!-- Bulk Action Bar (Prompt Section 4.1: bulk_set_person_status, bulk_validate_cards) -->
+        <div id="bulk-bar" class="hidden bg-[#121824] text-white p-3.5 rounded-xl border border-[#222c3c] shadow-lg flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full bg-[#F5B800]"></span>
+            <span class="text-xs font-bold"><span id="selected-count">0</span> people selected</span>
+            <span class="text-[11px] text-gray-400 border-l border-gray-700 pl-3">Audited via <code class="font-mono text-[#F5B800]">set_config('app.operator_id')</code></span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="bulkApplyStatus('ACTIVE')" class="px-2.5 py-1.5 bg-emerald-800/80 hover:bg-emerald-700 text-white rounded text-xs font-bold">
+              Set Active
+            </button>
+            <button onclick="bulkApplyStatus('SUSPENDED')" class="px-2.5 py-1.5 bg-red-800/80 hover:bg-red-700 text-white rounded text-xs font-bold">
+              Suspend Access
+            </button>
+            <button onclick="bulkValidateCards()" class="btn-tip-gold px-2.5 py-1.5 rounded text-xs">
+              Validate Semester Cards
+            </button>
+            <button onclick="deselectAllPeople()" class="text-gray-400 hover:text-white text-xs px-2 py-1">
+              Cancel
+            </button>
+          </div>
+        </div>
+
+        <!-- People Data Table -->
+        <div class="bg-white rounded-2xl border border-[#e3e7eb] overflow-hidden shadow-2xs">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-[#F4F6F8] text-gray-500 font-semibold border-b border-gray-200">
+                <tr>
+                  <th class="p-4 w-10">
+                    <input type="checkbox" id="select-all-people" onchange="toggleSelectAllPeople(this.checked)" class="rounded text-[#121824] focus:ring-[#F5B800]">
+                  </th>
+                  <th class="px-4 py-3">Full Name & ID</th>
+                  <th class="px-4 py-3">UniPass Code</th>
+                  <th class="px-4 py-3">Person Type</th>
+                  <th class="px-4 py-3">Campus</th>
+                  <th class="px-4 py-3">Status</th>
+                  <th class="px-4 py-3">Semester Validation</th>
+                  <th class="px-4 py-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100 font-medium">
+                <tr class="hover:bg-gray-50/80">
+                  <td class="p-4"><input type="checkbox" class="person-checkbox rounded text-[#121824]" onchange="onPersonCheckChange()"></td>
+                  <td class="px-4 py-3">
+                    <div class="font-bold text-[#121824]">Juan Dela Cruz</div>
+                    <div class="text-[11px] text-gray-400 font-mono">SN: 2026-89412</div>
+                  </td>
+                  <td class="px-4 py-3 font-mono font-bold text-[#121824]">UNIPASS-2026-89412</td>
+                  <td class="px-4 py-3"><span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded font-semibold text-[11px]">STUDENT</span></td>
+                  <td class="px-4 py-3 font-semibold text-gray-700">T.I.P. Quezon City</td>
+                  <td class="px-4 py-3"><span class="badge-allowed px-2 py-0.5 rounded-full font-bold">ACTIVE</span></td>
+                  <td class="px-4 py-3 text-gray-600 font-mono">Until 2026-10-31</td>
+                  <td class="px-4 py-3 text-right"><button class="text-xs text-[#121824] hover:text-[#F5B800] font-bold">Details</button></td>
+                </tr>
+                <tr class="hover:bg-gray-50/80">
+                  <td class="p-4"><input type="checkbox" class="person-checkbox rounded text-[#121824]" onchange="onPersonCheckChange()"></td>
+                  <td class="px-4 py-3">
+                    <div class="font-bold text-[#121824]">Dr. Maria Santos</div>
+                    <div class="text-[11px] text-gray-400 font-mono">EMP: 2026-21045</div>
+                  </td>
+                  <td class="px-4 py-3 font-mono font-bold text-[#121824]">UNIPASS-2026-21045</td>
+                  <td class="px-4 py-3"><span class="bg-purple-50 text-purple-700 px-2 py-0.5 rounded font-semibold text-[11px]">FACULTY</span></td>
+                  <td class="px-4 py-3 font-semibold text-gray-700">T.I.P. Quezon City</td>
+                  <td class="px-4 py-3"><span class="badge-allowed px-2 py-0.5 rounded-full font-bold">ACTIVE</span></td>
+                  <td class="px-4 py-3 text-gray-600 font-mono">Permanent</td>
+                  <td class="px-4 py-3 text-right"><button class="text-xs text-[#121824] hover:text-[#F5B800] font-bold">Details</button></td>
+                </tr>
+                <tr class="hover:bg-gray-50/80">
+                  <td class="p-4"><input type="checkbox" class="person-checkbox rounded text-[#121824]" onchange="onPersonCheckChange()"></td>
+                  <td class="px-4 py-3">
+                    <div class="font-bold text-[#121824]">Enrico Navarro</div>
+                    <div class="text-[11px] text-gray-400 font-mono">SN: 2026-99999</div>
+                  </td>
+                  <td class="px-4 py-3 font-mono font-bold text-[#121824]">UNIPASS-2026-99999</td>
+                  <td class="px-4 py-3"><span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded font-semibold text-[11px]">STUDENT</span></td>
+                  <td class="px-4 py-3 font-semibold text-gray-700">T.I.P. Manila</td>
+                  <td class="px-4 py-3"><span class="badge-denied px-2 py-0.5 rounded-full font-bold">SUSPENDED</span></td>
+                  <td class="px-4 py-3 text-gray-400 font-mono">Withheld (OSA)</td>
+                  <td class="px-4 py-3 text-right"><button class="text-xs text-[#121824] hover:text-[#F5B800] font-bold">Details</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB: VISITOR PASSES ================= -->
+      <section id="tab-passes" class="hidden space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-[#8b6a00] flex items-center gap-2">
+              <span class="w-4 h-0.5 bg-[#F5B800]"></span>
+              Single-Campus Lanyards
+            </div>
+            <h2 class="text-2xl font-display font-extrabold text-[#121824] mt-1">Visitor Passes</h2>
+            <p class="text-xs text-gray-500">Issued for a specific campus (<code class="font-mono text-[#121824]">visitor_passes.campus_id</code>) using sequence <code class="font-mono text-[#121824]">UNIPASS-VIS-000001</code></p>
+          </div>
+          <button class="btn-tip-gold px-4 py-2 rounded-lg text-xs font-bold shadow-2xs">
+            + Issue Visitor Pass
+          </button>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-[#e3e7eb] overflow-hidden shadow-2xs">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-[#F4F6F8] text-gray-500 font-semibold border-b border-gray-200">
+              <tr>
+                <th class="px-5 py-3">Pass Code</th>
+                <th class="px-4 py-3">Visitor Name</th>
+                <th class="px-4 py-3">Purpose / Host Office</th>
+                <th class="px-4 py-3">Assigned Campus</th>
+                <th class="px-4 py-3">Valid Range</th>
+                <th class="px-4 py-3">Status</th>
+                <th class="px-5 py-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 font-medium">
+              <tr class="hover:bg-gray-50/80">
+                <td class="px-5 py-3 font-mono font-bold text-[#121824]">UNIPASS-VIS-000001</td>
+                <td class="px-4 py-3 font-bold text-gray-900">Engr. Ramon Bautista</td>
+                <td class="px-4 py-3">Accreditation Audit / Dean Office</td>
+                <td class="px-4 py-3 font-semibold text-gray-700">T.I.P. Quezon City</td>
+                <td class="px-4 py-3 font-mono text-gray-600">Today 08:00 - 18:00</td>
+                <td class="px-4 py-3"><span class="badge-allowed px-2 py-0.5 rounded-full font-bold">ACTIVE</span></td>
+                <td class="px-5 py-3 text-right"><button class="text-xs font-bold text-red-700 hover:underline">Return Lanyard</button></td>
+              </tr>
+              <tr class="hover:bg-gray-50/80">
+                <td class="px-5 py-3 font-mono font-bold text-[#121824]">UNIPASS-VIS-000002</td>
+                <td class="px-4 py-3 font-bold text-gray-900">Arlene Villanueva</td>
+                <td class="px-4 py-3">Parent Inquiry / Admissions</td>
+                <td class="px-4 py-3 font-semibold text-gray-700">T.I.P. Manila</td>
+                <td class="px-4 py-3 font-mono text-gray-600">Today 10:00 - 14:00</td>
+                <td class="px-4 py-3"><span class="badge-neutral px-2 py-0.5 rounded-full font-bold">RETURNED</span></td>
+                <td class="px-5 py-3 text-right"><span class="text-xs text-gray-400">Completed</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= TAB: SUSPICIOUS SCANS ================= -->
+      <section id="tab-reviews" class="hidden space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-[#8b6a00] flex items-center gap-2">
+              <span class="w-4 h-0.5 bg-[#F5B800]"></span>
+              Anti-Passback & Anomaly Queue
+            </div>
+            <h2 class="text-2xl font-display font-extrabold text-[#121824] mt-1">Suspicious Scans Review</h2>
+            <p class="text-xs text-gray-500">Read from <code class="font-mono text-[#121824]">v_suspicious_scans</code>. Hints only — never used for automatic denials.</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-[#e3e7eb] overflow-hidden shadow-2xs">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-[#F4F6F8] text-gray-500 font-semibold border-b border-gray-200">
+              <tr>
+                <th class="px-5 py-3">Flag Type</th>
+                <th class="px-4 py-3">Card / Student</th>
+                <th class="px-4 py-3">Gate & Direction</th>
+                <th class="px-4 py-3">Timestamp (Manila)</th>
+                <th class="px-4 py-3">Anomaly Context</th>
+                <th class="px-4 py-3">Review State</th>
+                <th class="px-5 py-3 text-right">Review Action</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 font-medium">
+              <tr class="hover:bg-amber-50/40">
+                <td class="px-5 py-3 font-mono font-bold text-amber-800">
+                  <span class="badge-pending px-2 py-0.5 rounded-full">PASSBACK</span>
+                </td>
+                <td class="px-4 py-3 font-mono font-bold text-[#121824]">UNIPASS-2026-89412</td>
+                <td class="px-4 py-3">Gate 1 Turnstile (IN)</td>
+                <td class="px-4 py-3 font-mono text-gray-600">Today 07:44:12 AM</td>
+                <td class="px-4 py-3 text-gray-700">Two consecutive IN scans within 90 seconds without leaving.</td>
+                <td class="px-4 py-3"><span class="badge-pending px-2 py-0.5 rounded-full">PENDING_REVIEW</span></td>
+                <td class="px-5 py-3 text-right">
+                  <button onclick="openReviewModal('UNIPASS-2026-89412', 'PASSBACK')" class="btn-tip-gold px-2.5 py-1 rounded text-xs font-bold">
+                    Add Note & Resolve
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= TAB: ADMIN & RETENTION CLEANUP ================= -->
+      <section id="tab-registrar" class="hidden space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-[#8b6a00] flex items-center gap-2">
+              <span class="w-4 h-0.5 bg-[#F5B800]"></span>
+              Registrar Sync & Retention Policy
+            </div>
+            <h2 class="text-2xl font-display font-extrabold text-[#121824] mt-1">Registrar Sync & Privacy Purge</h2>
+            <p class="text-xs text-gray-500">Synced runs from <code class="font-mono text-[#121824]">sis_sync_runs</code> and statutory scan retention enforcement.</p>
+          </div>
+          <button onclick="runRetentionPurge()" class="btn-tip-dark px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 shadow-2xs">
+            <svg class="w-3.5 h-3.5 text-[#F5B800]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            Run Retention Clean-up (purge_expired_scan_logs)
+          </button>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-[#e3e7eb] p-6 shadow-2xs space-y-4">
+          <h3 class="font-bold text-sm text-[#121824]">Recent SIS Synchronization Runs</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-[#F4F6F8] text-gray-500 font-semibold border-b border-gray-200">
+                <tr>
+                  <th class="px-4 py-2.5">Sync ID</th>
+                  <th class="px-4 py-2.5">Target Academic Term</th>
+                  <th class="px-4 py-2.5">Records Processed</th>
+                  <th class="px-4 py-2.5">Auto-Deactivations</th>
+                  <th class="px-4 py-2.5">Sync Timestamp</th>
+                  <th class="px-4 py-2.5">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100 font-medium">
+                <tr>
+                  <td class="px-4 py-2.5 font-mono font-bold">SIS-RUN-2026-081</td>
+                  <td class="px-4 py-2.5">1st Semester 2026-2027</td>
+                  <td class="px-4 py-2.5 font-mono">14,210</td>
+                  <td class="px-4 py-2.5 font-mono text-red-600 font-bold">148 graduated/withdrawn</td>
+                  <td class="px-4 py-2.5 font-mono text-gray-500">2026-10-04 02:00 AM</td>
+                  <td class="px-4 py-2.5"><span class="badge-allowed px-2 py-0.5 rounded-full font-bold">SUCCESS</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ================= NOTIFICATION TOAST ================= -->
+  <div id="toast" class="fixed bottom-5 right-5 max-w-sm bg-[#121824] text-white p-4 rounded-xl shadow-2xl border border-[#222c3c] z-50 transform translate-y-20 opacity-0 transition-all duration-200 flex items-start gap-3">
+    <div id="toast-icon" class="w-5 h-5 text-[#F5B800] shrink-0 mt-0.5">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    </div>
+    <div>
+      <div id="toast-title" class="font-bold text-xs text-white">Notification</div>
+      <div id="toast-body" class="text-xs text-gray-300 mt-0.5">Operation executed successfully.</div>
+    </div>
+  </div>
+
+  <script>
+    // State management
+    let activeDirection = 'IN';
+    let currentCampus = 'ALL';
+    let isStaleSimulated = false;
+
+    // Tab Switching
+    function switchTab(tabId) {
+      const tabs = ['overview', 'scan', 'devices', 'people', 'passes', 'reviews', 'registrar'];
+      tabs.forEach(t => {
+        const section = document.getElementById('tab-' + t);
+        const navBtn = document.getElementById('nav-' + t);
+        if (section) section.classList.add('hidden');
+        if (navBtn) {
+          navBtn.classList.remove('active');
+          navBtn.classList.add('text-gray-300');
+        }
+      });
+
+      const targetSection = document.getElementById('tab-' + tabId);
+      const targetNav = document.getElementById('nav-' + tabId);
+      if (targetSection) targetSection.classList.remove('hidden');
+      if (targetNav) {
+        targetNav.classList.add('active');
+        targetNav.classList.remove('text-gray-300');
+      }
+    }
+
+    // Direction Toggle
+    function setDirection(dir) {
+      activeDirection = dir;
+      ['in', 'out', 'pass'].forEach(d => {
+        const btn = document.getElementById('dir-' + d);
+        if (d === dir.toLowerCase()) {
+          btn.className = 'py-2 text-xs font-bold rounded-lg transition-all bg-[#121824] text-white shadow-2xs';
+        } else {
+          btn.className = 'py-2 text-xs font-bold rounded-lg text-gray-600 hover:text-gray-900 transition-all';
+        }
+      });
+    }
+
+    // Campus Switcher
+    function onCampusChange(val) {
+      currentCampus = val;
+      const statusLabel = document.getElementById('sidebar-campus-status');
+      const headcountLabel = document.getElementById('kpi-headcount');
+      const scansLabel = document.getElementById('kpi-scans');
+
+      if (val === 'ALL') {
+        statusLabel.textContent = 'All campuses active';
+        headcountLabel.textContent = '1,482';
+        scansLabel.textContent = '3,240';
+        showToast('Campus Filter Changed', 'Showing combined data for T.I.P. Quezon City & Manila');
+      } else if (val === 'QC') {
+        statusLabel.textContent = 'T.I.P. Quezon City active';
+        headcountLabel.textContent = '914';
+        scansLabel.textContent = '2,010';
+        showToast('Campus Filter Changed', 'Filtered to T.I.P. Quezon City Campus');
+      } else if (val === 'MNL') {
+        statusLabel.textContent = 'T.I.P. Manila active';
+        headcountLabel.textContent = '568';
+        scansLabel.textContent = '1,230';
+        showToast('Campus Filter Changed', 'Filtered to T.I.P. Manila Campus');
+      }
+    }
+
+    function clearCredentialInput() {
+      document.getElementById('credential-input').value = '';
+      document.getElementById('credential-input').focus();
+    }
+
+    function fillAndCheck(code) {
+      document.getElementById('credential-input').value = code;
+      document.getElementById('guard-visual-check').checked = true;
+      processScan('MANUAL_CODE');
+    }
+
+    function simulateCameraScan() {
+      document.getElementById('credential-input').value = 'UNIPASS-2026-89412';
+      document.getElementById('guard-visual-check').checked = false; // Camera QR does not require GUARD_VISUAL
+      processScan('QR_SCAN');
+    }
+
+    // Verification Logic (Prompt Section 2 & Postgres find_card_by_credential)
+    function processScan(inputMethod) {
+      const cred = document.getElementById('credential-input').value.trim();
+      const visualChecked = document.getElementById('guard-visual-check').checked;
+
+      if (!cred) {
+        showToast('Missing Credential', 'Please enter or scan a UniPass code first.');
+        return;
+      }
+
+      // Mandatory Guard Visual Check for Manual Entry
+      if (inputMethod === 'MANUAL_CODE' && !visualChecked) {
+        showToast('Verification Required', 'Postgres rule: You must tick "I checked the face against the photo" for manual code entry.');
+        const checkLabel = document.getElementById('guard-visual-check').parentElement;
+        checkLabel.classList.add('ring-2', 'ring-red-500', 'p-1', 'rounded');
+        setTimeout(() => checkLabel.classList.remove('ring-2', 'ring-red-500', 'p-1', 'rounded'), 2000);
+        return;
+      }
+
+      const badgeBox = document.getElementById('decision-badge-box');
+      const title = document.getElementById('decision-title');
+      const subtitle = document.getElementById('decision-subtitle');
+      const details = document.getElementById('decision-details');
+      const timestamp = document.getElementById('decision-timestamp');
+
+      const now = new Intl.DateTimeFormat('en-PH', { timeZone: 'Asia/Manila', timeStyle: 'medium', dateStyle: 'short' }).format(new Date());
+      timestamp.textContent = now;
+
+      if (cred === 'UNIPASS-2026-99999') {
+        // Suspended student scenario
+        badgeBox.className = 'my-5 p-6 rounded-2xl text-center bg-red-50 border border-red-200';
+        badgeBox.innerHTML = `
+          <div class="w-12 h-12 rounded-full mx-auto flex items-center justify-center bg-red-100 text-red-700 mb-3">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </div>
+          <h3 class="font-display font-extrabold text-2xl text-red-800">DENIED</h3>
+          <p class="text-xs text-red-700 mt-1 font-semibold">Card Status: SUSPENDED — Please direct student to Office of Student Affairs (OSA).</p>
+        `;
+        details.classList.remove('hidden');
+        document.getElementById('cardholder-category').textContent = 'STUDENT';
+        document.getElementById('cardholder-code').textContent = cred;
+        document.getElementById('cardholder-campus').textContent = 'T.I.P. Manila';
+        document.getElementById('cardholder-dir').textContent = `${activeDirection} @ Gate 1 (Manual Check)`;
+        showToast('Gate Scan Rejected', 'Access Denied: Suspended Student Credential');
+      } else {
+        // Allowed scenario
+        badgeBox.className = 'my-5 p-6 rounded-2xl text-center bg-emerald-50 border border-emerald-200';
+        badgeBox.innerHTML = `
+          <div class="w-12 h-12 rounded-full mx-auto flex items-center justify-center bg-emerald-100 text-emerald-700 mb-3">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <h3 class="font-display font-extrabold text-2xl text-emerald-800">ALLOWED</h3>
+          <p class="text-xs text-emerald-700 mt-1 font-semibold">Access Granted • Verified via database find_card_by_credential()</p>
+        `;
+        details.classList.remove('hidden');
+        document.getElementById('cardholder-category').textContent = cred.includes('VIS') ? 'VISITOR' : cred.includes('21045') ? 'FACULTY' : 'STUDENT';
+        document.getElementById('cardholder-code').textContent = cred;
+        document.getElementById('cardholder-campus').textContent = 'T.I.P. Quezon City';
+        document.getElementById('cardholder-dir').textContent = `${activeDirection} @ Gate 1`;
+        showToast('Gate Scan Recorded', `Turnstile unlocked for ${cred} (${activeDirection})`);
+      }
+    }
+
+    // Heartbeat Demo Helper (Prompt Section 5)
+    function simulateHeartbeat() {
+      const banner = document.getElementById('outage-banner');
+      const pill = document.getElementById('top-outage-pill');
+      const lagWarn = document.getElementById('kpi-lag-warning');
+      const g3Pin = document.getElementById('g3-pin');
+      const g3Badge = document.getElementById('g3-table-badge');
+      const g3Time = document.getElementById('g3-time');
+
+      banner.classList.add('hidden');
+      pill.classList.add('hidden');
+      lagWarn.innerHTML = `<span class="text-emerald-600 font-semibold flex items-center gap-1">✓ All 7 gate devices healthy & live</span>`;
+
+      if (g3Pin) {
+        g3Pin.className = 'relative w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-[10px] shadow-lg border-2 border-[#121824]';
+      }
+      if (g3Badge) {
+        g3Badge.innerHTML = `<span class="badge-allowed px-2 py-0.5 rounded-full font-bold">ONLINE</span>`;
+      }
+      if (g3Time) {
+        g3Time.className = 'px-4 py-3 text-gray-400 font-mono';
+        g3Time.textContent = 'Just now (Simulated)';
+      }
+
+      showToast('Heartbeat Dispatched', 'Simulated UPDATE devices SET last_seen_at = now(). All devices now ONLINE.');
+    }
+
+    // Bulk actions
+    function onPersonCheckChange() {
+      const boxes = document.querySelectorAll('.person-checkbox:checked');
+      const count = boxes.length;
+      const bar = document.getElementById('bulk-bar');
+      const countLabel = document.getElementById('selected-count');
+      if (count > 0) {
+        bar.classList.remove('hidden');
+        bar.classList.add('flex');
+        countLabel.textContent = count;
+      } else {
+        bar.classList.add('hidden');
+        bar.classList.remove('flex');
+      }
+    }
+
+    function toggleSelectAllPeople(checked) {
+      document.querySelectorAll('.person-checkbox').forEach(cb => cb.checked = checked);
+      onPersonCheckChange();
+    }
+
+    function deselectAllPeople() {
+      document.getElementById('select-all-people').checked = false;
+      toggleSelectAllPeople(false);
+    }
+
+    function bulkApplyStatus(status) {
+      const count = document.querySelectorAll('.person-checkbox:checked').length;
+      showToast('Bulk Action Executed', `Executed bulk_set_person_status(${count} records to ${status}) with operator transaction lock.`);
+      deselectAllPeople();
+    }
+
+    function bulkValidateCards() {
+      const count = document.querySelectorAll('.person-checkbox:checked').length;
+      showToast('Cards Validated', `Executed bulk_validate_cards(${count} cards until 2026-10-31) in audit log.`);
+      deselectAllPeople();
+    }
+
+    function openReviewModal(card, flag) {
+      showToast('Scan Review Logged', `Flag ${flag} for ${card} marked as REVIEWED. Note added to audit log.`);
+    }
+
+    function runRetentionPurge() {
+      showToast('Retention Purge Complete', 'Called purge_expired_scan_logs(). Expired audit & scan rows older than retention policy cleaned up.');
+    }
+
+    // Toast utility
+    let toastTimeout;
+    function showToast(title, msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-title').textContent = title;
+      document.getElementById('toast-body').textContent = msg;
+
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 4000);
+    }
+  </script>
+</body>
+</html>
